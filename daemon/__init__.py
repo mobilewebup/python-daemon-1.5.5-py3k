@@ -40,7 +40,6 @@
 import version
 from daemon import DaemonContext
 
-
 _version = version.version
 _copyright = version.copyright
 _license = version.license

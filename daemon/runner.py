@@ -26,7 +26,6 @@ import pidlockfile
 
 from daemon import DaemonContext
 
-
 class DaemonRunnerError(Exception):
     """ Abstract base class for errors from DaemonRunner. """
 
@@ -39,7 +38,6 @@ class DaemonRunnerStartFailureError(RuntimeError, DaemonRunnerError):
 class DaemonRunnerStopFailureError(RuntimeError, DaemonRunnerError):
     """ Raised when failure stopping DaemonRunner. """
 
-
 class DaemonRunner(object):
     """ Controller for a callable running in a separate background process.
 

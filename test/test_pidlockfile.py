@@ -25,7 +25,6 @@ import lockfile
 import scaffold
 from daemon import pidlockfile
 
-
 class FakeFileDescriptorStringIO(StringIO, object):
     """ A StringIO class that fakes a file descriptor. """
 
@@ -39,7 +38,6 @@ class FakeFileDescriptorStringIO(StringIO, object):
     def fileno(self):
         return self._fileno
 
-
 class Exception_TestCase(scaffold.Exception_TestCase):
     """ Test cases for module exception classes. """
 
@@ -58,7 +56,6 @@ class Exception_TestCase(scaffold.Exception_TestCase):
                 ),
             }
 
-
 def make_pidlockfile_scenarios():
     """ Make a collection of scenarios for testing PIDLockFile instances. """
 
@@ -297,7 +294,6 @@ def setup_lockfile_method_mocks(testcase, scenario, class_name):
         except NameError:
             pass
 
-
 def setup_pidlockfile_fixtures(testcase, scenario_name=None):
     """ Set up common fixtures for PIDLockFile test cases. """
 
@@ -327,7 +323,6 @@ def set_pidlockfile_scenario(testcase, scenario_name, clear_tracker=True):
     if clear_tracker:
         testcase.mock_tracker.clear()
 
-
 class PIDLockFile_TestCase(scaffold.TestCase):
     """ Test cases for PIDLockFile class. """
 
@@ -355,7 +350,6 @@ class PIDLockFile_TestCase(scaffold.TestCase):
         expect_path = self.scenario['path']
         self.failUnlessEqual(expect_path, instance.path)
 
-
 class PIDLockFile_read_pid_TestCase(scaffold.TestCase):
     """ Test cases for PIDLockFile.read_pid method. """
 
@@ -375,7 +369,6 @@ class PIDLockFile_read_pid_TestCase(scaffold.TestCase):
         result = instance.read_pid()
         self.failUnlessEqual(expect_pid, result)
 
-
 class PIDLockFile_acquire_TestCase(scaffold.TestCase):
     """ Test cases for PIDLockFile.acquire function. """
 
@@ -433,7 +426,6 @@ class PIDLockFile_acquire_TestCase(scaffold.TestCase):
             expect_error,
             instance.acquire)
 
-
 class PIDLockFile_release_TestCase(scaffold.TestCase):
     """ Test cases for PIDLockFile.release function. """
 
@@ -497,7 +489,6 @@ class PIDLockFile_release_TestCase(scaffold.TestCase):
         instance.release()
         self.failUnlessMockCheckerMatch(expect_mock_output)
 
-
 class PIDLockFile_break_lock_TestCase(scaffold.TestCase):
     """ Test cases for PIDLockFile.break_lock function. """
 
@@ -531,7 +522,6 @@ class PIDLockFile_break_lock_TestCase(scaffold.TestCase):
         instance.break_lock()
         self.failUnlessMockCheckerMatch(expect_mock_output)
 
-
 class read_pid_from_pidfile_TestCase(scaffold.TestCase):
     """ Test cases for read_pid_from_pidfile function. """
 
@@ -598,7 +588,6 @@ class read_pid_from_pidfile_TestCase(scaffold.TestCase):
             expect_error,
             pidlockfile.read_pid_from_pidfile, pidfile_path)
 
-
 class remove_existing_pidfile_TestCase(scaffold.TestCase):
     """ Test cases for remove_existing_pidfile function. """
 
@@ -649,7 +638,6 @@ class remove_existing_pidfile_TestCase(scaffold.TestCase):
             pidlockfile.remove_existing_pidfile,
             pidfile_path)
 
-
 class write_pid_to_pidfile_TestCase(scaffold.TestCase):
     """ Test cases for write_pid_to_pidfile function. """
 
@@ -704,7 +692,6 @@ class write_pid_to_pidfile_TestCase(scaffold.TestCase):
         scaffold.mock_restore()
         self.failUnlessMockCheckerMatch(expect_mock_output)
 
-
 class TimeoutPIDLockFile_TestCase(scaffold.TestCase):
     """ Test cases for ‘TimeoutPIDLockFile’ class. """
 

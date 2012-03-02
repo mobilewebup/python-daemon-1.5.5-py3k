@@ -22,14 +22,12 @@ from lockfile import (
     NotLocked, NotMyLock,
     )
 
-
 class PIDFileError(Exception):
     """ Abstract base class for errors specific to PID files. """
 
 class PIDFileParseError(ValueError, PIDFileError):
     """ Raised when parsing contents of PID file fails. """
 
-
 class PIDLockFile(LinkFileLock, object):
     """ Lockfile implemented as a Unix PID file.
 
@@ -84,7 +82,6 @@ class PIDLockFile(LinkFileLock, object):
         super(PIDLockFile, self).break_lock()
         remove_existing_pidfile(self.path)
 
-
 class TimeoutPIDLockFile(PIDLockFile):
     """ Lockfile with default timeout, implemented as a Unix PID file.
 
@@ -108,7 +105,6 @@ class TimeoutPIDLockFile(PIDLockFile):
             timeout = self.acquire_timeout
         super(TimeoutPIDLockFile, self).acquire(timeout, *args, **kwargs)
 
-
 def read_pid_from_pidfile(pidfile_path):
     """ Read the PID recorded in the named PID file.
 

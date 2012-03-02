@@ -27,7 +27,6 @@ short_description, long_description = (
     for d in main_module.__doc__.split(u'\n\n', 1)
     )
 
-
 setup(
     name=distribution_name,
     version=version.version,
