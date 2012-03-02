@@ -725,11 +725,12 @@ class DaemonContext_terminate_TestCase(scaffold.TestCase):
         args = self.test_args
         signal_number = self.test_signal
         expect_exception = SystemExit
+        exc_text = ''
         try:
             instance.terminate(*args)
         except expect_exception as exc:
-            pass
-        self.failUnlessIn(str(exc), str(signal_number))
+            exc_text = str(exc)
+        self.failUnlessIn(exc_text, str(signal_number))
 
 class DaemonContext_get_exclude_file_descriptors_TestCase(scaffold.TestCase):
     """ Test cases for DaemonContext._get_exclude_file_descriptors function. """
@@ -932,11 +933,12 @@ class change_working_directory_TestCase(scaffold.TestCase):
         test_error = OSError(errno.ENOENT, "No such directory")
         os.chdir.mock_raises = test_error
         expect_error = daemon.daemon.DaemonOSEnvironmentError
+        exc_text = ''
         try:
             daemon.daemon.change_working_directory(**args)
         except expect_error as exc:
-            pass
-        self.failUnlessIn(str(exc), str(test_error))
+            exc_text = str(exc)
+        self.failUnlessIn(exc_text, str(test_error))
 
 class change_root_directory_TestCase(scaffold.TestCase):
     """ Test cases for change_root_directory function. """
@@ -1009,11 +1011,12 @@ class change_root_directory_TestCase(scaffold.TestCase):
         test_error = OSError(errno.ENOENT, "No such directory")
         os.chdir.mock_raises = test_error
         expect_error = daemon.daemon.DaemonOSEnvironmentError
+        exc_text = ''
         try:
             daemon.daemon.change_root_directory(**args)
         except expect_error as exc:
-            pass
-        self.failUnlessIn(str(exc), str(test_error))
+            exc_text = str(exc)
+        self.failUnlessIn(exc_text, str(test_error))
 
 class change_file_creation_mask_TestCase(scaffold.TestCase):
     """ Test cases for change_file_creation_mask function. """
@@ -1061,11 +1064,12 @@ class change_file_creation_mask_TestCase(scaffold.TestCase):
         test_error = OSError(errno.ENOENT, "No such directory")
         os.umask.mock_raises = test_error
         expect_error = daemon.daemon.DaemonOSEnvironmentError
+        exc_text = ''
         try:
             daemon.daemon.change_file_creation_mask(**args)
         except expect_error as exc:
-            pass
-        self.failUnlessIn(str(exc), str(test_error))
+            exc_text = str(exc)
+        self.failUnlessIn(exc_text, str(test_error))
 
 class change_process_owner_TestCase(scaffold.TestCase):
     """ Test cases for change_process_owner function. """
@@ -1156,11 +1160,12 @@ class change_process_owner_TestCase(scaffold.TestCase):
         test_error = OSError(errno.EINVAL, "Whatchoo talkin' 'bout?")
         os.setuid.mock_raises = test_error
         expect_error = daemon.daemon.DaemonOSEnvironmentError
+        exc_text = ''
         try:
             daemon.daemon.change_process_owner(**args)
         except expect_error as exc:
-            pass
-        self.failUnlessIn(str(exc), str(test_error))
+            exc_text = str(exc)
+        self.failUnlessIn(exc_text, str(test_error))
 
 class prevent_core_dump_TestCase(scaffold.TestCase):
     """ Test cases for prevent_core_dump function. """

@@ -471,14 +471,15 @@ class DaemonRunner_do_action_start_TestCase(scaffold.TestCase):
         pidfile_path = self.scenario['pidfile_path']
         expect_error = runner.DaemonRunnerStartFailureError
         expect_message_content = pidfile_path
+        exc_text = ''
         try:
             instance.do_action()
         except expect_error as exc:
-            pass
+            exc_text = str(exc)
         else:
             raise self.failureException(
                 "Failed to raise " + expect_error.__name__)
-        self.failUnlessIn(str(exc), expect_message_content)
+        self.failUnlessIn(exc_text, expect_message_content)
 
     def test_breaks_lock_if_no_such_process(self):
         """ Should request breaking lock if PID file process is not running. """
@@ -565,15 +566,16 @@ class DaemonRunner_do_action_stop_TestCase(scaffold.TestCase):
         pidfile_path = self.scenario['pidfile_path']
         expect_error = runner.DaemonRunnerStopFailureError
         expect_message_content = pidfile_path
+        exc_text = ''
         try:
             instance.do_action()
         except expect_error as exc:
-            pass
+            exc_text = str(exc)
         else:
             raise self.failureException(
                 "Failed to raise " + expect_error.__name__)
         scaffold.mock_restore()
-        self.failUnlessIn(str(exc), expect_message_content)
+        self.failUnlessIn(exc_text, expect_message_content)
 
     def test_breaks_lock_if_pidfile_stale(self):
         """ Should break lock if PID file is stale. """
@@ -614,14 +616,15 @@ class DaemonRunner_do_action_stop_TestCase(scaffold.TestCase):
         os.kill.mock_raises = error
         expect_error = runner.DaemonRunnerStopFailureError
         expect_message_content = str(test_pid)
+        exc_text = ''
         try:
             instance.do_action()
         except expect_error as exc:
-            pass
+            exc_text = str(exc)
         else:
             raise self.failureException(
                 "Failed to raise " + expect_error.__name__)
-        self.failUnlessIn(str(exc), expect_message_content)
+        self.failUnlessIn(exc_text, expect_message_content)
 
 
 class DaemonRunner_do_action_restart_TestCase(scaffold.TestCase):
