@@ -13,16 +13,16 @@
 """ Unit test for pidlockfile module.
     """
 
-import __builtin__
+import builtins
 import os
-from StringIO import StringIO
+from io import StringIO
 import itertools
 import tempfile
 import errno
 
 import lockfile
 
-import scaffold
+from . import scaffold
 from daemon import pidlockfile
 
 class FakeFileDescriptorStringIO(StringIO, object):
@@ -31,7 +31,7 @@ class FakeFileDescriptorStringIO(StringIO, object):
     _fileno_generator = itertools.count()
 
     def __init__(self, *args, **kwargs):
-        self._fileno = self._fileno_generator.next()
+        self._fileno = next(self._fileno_generator)
         super_instance = super(FakeFileDescriptorStringIO, self)
         super_instance.__init__(*args, **kwargs)
 
@@ -118,7 +118,7 @@ def make_pidlockfile_scenarios():
             },
         }
 
-    for scenario in scenarios.values():
+    for scenario in list(scenarios.values()):
         scenario['pid'] = mock_current_pid
         scenario['path'] = mock_pidfile_path
         if 'pidfile' not in scenario:
@@ -198,7 +198,7 @@ def setup_pidfile_fixtures(testcase):
             return result
 
         funcs = dict(
-            (name, obj) for (name, obj) in vars().items()
+            (name, obj) for (name, obj) in list(vars().items())
             if hasattr(obj, '__call__'))
 
         return funcs
@@ -654,7 +654,7 @@ class write_pid_to_pidfile_TestCase(scaffold.TestCase):
         """ Should attempt to open specified PID file filename. """
         pidfile_path = self.scenario['path']
         expect_flags = (os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-        expect_mode = 0644
+        expect_mode = 0o644
         expect_mock_output = """\
             Called os.open(%(pidfile_path)r, %(expect_flags)r, %(expect_mode)r)
             ...

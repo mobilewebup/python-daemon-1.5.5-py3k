@@ -13,21 +13,21 @@
 """ Unit test for runner module.
     """
 
-import __builtin__
+import builtins
 import os
 import sys
 import tempfile
 import errno
 import signal
 
-import scaffold
-from test_pidlockfile import (
+from . import scaffold
+from .test_pidlockfile import (
     FakeFileDescriptorStringIO,
     setup_pidfile_fixtures,
     make_pidlockfile_scenarios,
     setup_lockfile_method_mocks,
     )
-from test_daemon import (
+from .test_daemon import (
     setup_streams_fixtures,
     )
 import daemon.daemon
@@ -75,7 +75,7 @@ def make_runner_scenarios():
             },
         }
 
-    for scenario in scenarios.values():
+    for scenario in list(scenarios.values()):
         if 'pidlockfile_scenario_name' in scenario:
             pidlockfile_scenario = pidlockfile_scenarios.pop(
                 scenario['pidlockfile_scenario_name'])
@@ -421,7 +421,7 @@ class DaemonRunner_parse_args_TestCase(scaffold.TestCase):
     def test_sets_action_from_first_argument(self):
         """ Should set action from first commandline argument. """
         instance = self.test_instance
-        for name, argv in self.valid_argv_params.items():
+        for name, argv in list(self.valid_argv_params.items()):
             expect_action = name
             instance.parse_args(argv)
             self.failUnlessEqual(expect_action, instance.action)
@@ -473,7 +473,7 @@ class DaemonRunner_do_action_start_TestCase(scaffold.TestCase):
         expect_message_content = pidfile_path
         try:
             instance.do_action()
-        except expect_error, exc:
+        except expect_error as exc:
             pass
         else:
             raise self.failureException(
@@ -567,7 +567,7 @@ class DaemonRunner_do_action_stop_TestCase(scaffold.TestCase):
         expect_message_content = pidfile_path
         try:
             instance.do_action()
-        except expect_error, exc:
+        except expect_error as exc:
             pass
         else:
             raise self.failureException(
@@ -616,7 +616,7 @@ class DaemonRunner_do_action_stop_TestCase(scaffold.TestCase):
         expect_message_content = str(test_pid)
         try:
             instance.do_action()
-        except expect_error, exc:
+        except expect_error as exc:
             pass
         else:
             raise self.failureException(

@@ -22,10 +22,10 @@ import signal
 import socket
 from types import ModuleType
 import atexit
-from StringIO import StringIO
+from io import StringIO
 
-import scaffold
-from test_pidlockfile import (
+from . import scaffold
+from .test_pidlockfile import (
     FakeFileDescriptorStringIO,
     setup_pidfile_fixtures,
     )
@@ -727,7 +727,7 @@ class DaemonContext_terminate_TestCase(scaffold.TestCase):
         expect_exception = SystemExit
         try:
             instance.terminate(*args)
-        except expect_exception, exc:
+        except expect_exception as exc:
             pass
         self.failUnlessIn(str(exc), str(signal_number))
 
@@ -747,11 +747,11 @@ class DaemonContext_get_exclude_file_descriptors_TestCase(scaffold.TestCase):
             37: 37,
             42: FakeFileDescriptorStringIO(),
             }
-        for (fileno, item) in self.test_files.items():
+        for (fileno, item) in list(self.test_files.items()):
             if hasattr(item, '_fileno'):
                 item._fileno = fileno
         self.test_file_descriptors = set(
-            fd for (fd, item) in self.test_files.items()
+            fd for (fd, item) in list(self.test_files.items())
             if item is not None)
         self.test_file_descriptors.update(
             self.stream_files_by_name[name].fileno()
@@ -765,7 +765,7 @@ class DaemonContext_get_exclude_file_descriptors_TestCase(scaffold.TestCase):
     def test_returns_expected_file_descriptors(self):
         """ Should return expected set of file descriptors. """
         instance = self.test_instance
-        instance.files_preserve = self.test_files.values()
+        instance.files_preserve = list(self.test_files.values())
         expect_result = self.test_file_descriptors
         result = instance._get_exclude_file_descriptors()
         self.failUnlessEqual(expect_result, result)
@@ -776,7 +776,7 @@ class DaemonContext_get_exclude_file_descriptors_TestCase(scaffold.TestCase):
         instance.files_preserve = None
         expect_result = set(
             stream.fileno()
-            for stream in self.stream_files_by_name.values())
+            for stream in list(self.stream_files_by_name.values()))
         result = instance._get_exclude_file_descriptors()
         self.failUnlessEqual(expect_result, result)
 
@@ -792,11 +792,11 @@ class DaemonContext_get_exclude_file_descriptors_TestCase(scaffold.TestCase):
     def test_return_set_omits_streams_without_file_descriptors(self):
         """ Should omit any stream without a file descriptor. """
         instance = self.test_instance
-        instance.files_preserve = self.test_files.values()
+        instance.files_preserve = list(self.test_files.values())
         stream_files = self.stream_files_by_name
-        stream_names = stream_files.keys()
+        stream_names = list(stream_files.keys())
         expect_result = self.test_file_descriptors.copy()
-        for (pseudo_stream_name, pseudo_stream) in stream_files.items():
+        for (pseudo_stream_name, pseudo_stream) in list(stream_files.items()):
             setattr(instance, pseudo_stream_name, StringIO())
             stream_fd = pseudo_stream.fileno()
             expect_result.discard(stream_fd)
@@ -863,10 +863,10 @@ class DaemonContext_make_signal_handler_map_TestCase(scaffold.TestCase):
 
         self.test_signal_handlers = dict(
             (key, object())
-            for key in self.test_instance.signal_map.values())
+            for key in list(self.test_instance.signal_map.values()))
         self.test_signal_handler_map = dict(
             (key, self.test_signal_handlers[target])
-            for (key, target) in self.test_instance.signal_map.items())
+            for (key, target) in list(self.test_instance.signal_map.items()))
 
         def mock_make_signal_handler(target):
             return self.test_signal_handlers[target]
@@ -934,7 +934,7 @@ class change_working_directory_TestCase(scaffold.TestCase):
         expect_error = daemon.daemon.DaemonOSEnvironmentError
         try:
             daemon.daemon.change_working_directory(**args)
-        except expect_error, exc:
+        except expect_error as exc:
             pass
         self.failUnlessIn(str(exc), str(test_error))
 
@@ -1011,7 +1011,7 @@ class change_root_directory_TestCase(scaffold.TestCase):
         expect_error = daemon.daemon.DaemonOSEnvironmentError
         try:
             daemon.daemon.change_root_directory(**args)
-        except expect_error, exc:
+        except expect_error as exc:
             pass
         self.failUnlessIn(str(exc), str(test_error))
 
@@ -1063,7 +1063,7 @@ class change_file_creation_mask_TestCase(scaffold.TestCase):
         expect_error = daemon.daemon.DaemonOSEnvironmentError
         try:
             daemon.daemon.change_file_creation_mask(**args)
-        except expect_error, exc:
+        except expect_error as exc:
             pass
         self.failUnlessIn(str(exc), str(test_error))
 
@@ -1158,7 +1158,7 @@ class change_process_owner_TestCase(scaffold.TestCase):
         expect_error = daemon.daemon.DaemonOSEnvironmentError
         try:
             daemon.daemon.change_process_owner(**args)
-        except expect_error, exc:
+        except expect_error as exc:
             pass
         self.failUnlessIn(str(exc), str(test_error))
 
@@ -1384,7 +1384,7 @@ class close_all_open_files_TestCase(scaffold.TestCase):
 
     def test_requests_all_open_files_to_close(self):
         """ Should request close of all open files. """
-        expect_file_descriptors = reversed(range(self.test_maxfd))
+        expect_file_descriptors = reversed(list(range(self.test_maxfd)))
         expect_mock_output = "...\n" + "".join(
             "Called daemon.daemon.close_file_descriptor_if_open(%(fd)r)\n"
                 % vars()
@@ -1399,7 +1399,7 @@ class close_all_open_files_TestCase(scaffold.TestCase):
             exclude = test_exclude,
             )
         expect_file_descriptors = (
-            fd for fd in reversed(range(self.test_maxfd))
+            fd for fd in reversed(list(range(self.test_maxfd)))
             if fd not in test_exclude)
         expect_mock_output = "...\n" + "".join(
             "Called daemon.daemon.close_file_descriptor_if_open(%(fd)r)\n"
@@ -1459,7 +1459,7 @@ class detach_process_context_TestCase(scaffold.TestCase):
         test_pids_iter = iter([fork_error])
 
         def mock_fork():
-            next = test_pids_iter.next()
+            next = next(test_pids_iter)
             if isinstance(next, Exception):
                 raise next
             else:
@@ -1509,7 +1509,7 @@ class detach_process_context_TestCase(scaffold.TestCase):
         test_pids_iter = iter([0, fork_error])
 
         def mock_fork():
-            next = test_pids_iter.next()
+            next = next(test_pids_iter)
             if isinstance(next, Exception):
                 raise next
             else:
@@ -1829,7 +1829,7 @@ class make_default_signal_map_TestCase(scaffold.TestCase):
 
         self.default_signal_map = dict(
             (getattr(signal, name), target)
-            for (name, target) in default_signal_map_by_name.items())
+            for (name, target) in list(default_signal_map_by_name.items()))
 
     def tearDown(self):
         """ Tear down test fixtures. """
@@ -1883,7 +1883,7 @@ class set_signal_handlers_TestCase(scaffold.TestCase):
         expect_mock_output = "".join(
             "Called signal.signal(%(signal_number)r, %(handler)r)\n"
                 % vars()
-            for (signal_number, handler) in signal_handler_map.items())
+            for (signal_number, handler) in list(signal_handler_map.items()))
         daemon.daemon.set_signal_handlers(signal_handler_map)
         self.failUnlessMockCheckerMatch(expect_mock_output)
 

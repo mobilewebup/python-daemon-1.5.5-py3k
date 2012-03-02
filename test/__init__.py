@@ -13,6 +13,6 @@
 """ Unit test suite for daemon package.
     """
 
-import scaffold
+from . import scaffold
 
 suite = scaffold.make_suite()
