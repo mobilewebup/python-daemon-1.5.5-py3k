@@ -21,6 +21,7 @@ import tempfile
 import errno
 
 import lockfile
+from lockfile.linklockfile import LinkLockFile
 
 from test import scaffold
 from daemon import pidlockfile
@@ -314,7 +315,7 @@ def set_pidlockfile_scenario(testcase, scenario_name, clear_tracker=True):
     """ Set up the test case to the specified scenario. """
     testcase.scenario = testcase.pidlockfile_scenarios[scenario_name]
     setup_lockfile_method_mocks(
-        testcase, testcase.scenario, "lockfile.LinkFileLock")
+        testcase, testcase.scenario, "LinkLockFile")
     testcase.pidlockfile_args = dict(
         path=testcase.scenario['path'],
         )
@@ -342,7 +343,7 @@ class PIDLockFile_TestCase(scaffold.TestCase):
     def test_inherits_from_linkfilelock(self):
         """ Should inherit from LinkFileLock. """
         instance = self.test_instance
-        self.failUnlessIsInstance(instance, lockfile.LinkFileLock)
+        self.failUnlessIsInstance(instance, LinkLockFile)
 
     def test_has_specified_path(self):
         """ Should have specified path. """
@@ -385,7 +386,7 @@ class PIDLockFile_acquire_TestCase(scaffold.TestCase):
         """ Should first call LinkFileLock.acquire method. """
         instance = self.test_instance
         expect_mock_output = """\
-            Called lockfile.LinkFileLock.acquire()
+            Called LinkLockFile.acquire()
             ...
             """
         instance.acquire()
@@ -396,7 +397,7 @@ class PIDLockFile_acquire_TestCase(scaffold.TestCase):
         instance = self.test_instance
         test_timeout = object()
         expect_mock_output = """\
-            Called lockfile.LinkFileLock.acquire(timeout=%(test_timeout)r)
+            Called LinkLockFile.acquire(timeout=%(test_timeout)r)
             ...
             """ % vars()
         instance.acquire(timeout=test_timeout)
@@ -484,7 +485,7 @@ class PIDLockFile_release_TestCase(scaffold.TestCase):
         instance = self.test_instance
         expect_mock_output = """\
             ...
-            Called lockfile.LinkFileLock.release()
+            Called LinkLockFile.release()
             """
         instance.release()
         self.failUnlessMockCheckerMatch(expect_mock_output)
@@ -505,7 +506,7 @@ class PIDLockFile_break_lock_TestCase(scaffold.TestCase):
         """ Should first call LinkFileLock.break_lock method. """
         instance = self.test_instance
         expect_mock_output = """\
-            Called lockfile.LinkFileLock.break_lock()
+            Called LinkLockFile.break_lock()
             ...
             """
         instance.break_lock()
