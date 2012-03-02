@@ -24,8 +24,8 @@ from types import ModuleType
 import atexit
 from io import StringIO
 
-from . import scaffold
-from .test_pidlockfile import (
+import scaffold
+from test_pidlockfile import (
     FakeFileDescriptorStringIO,
     setup_pidfile_fixtures,
     )

@@ -20,14 +20,14 @@ import tempfile
 import errno
 import signal
 
-from . import scaffold
-from .test_pidlockfile import (
+import scaffold
+from test_pidlockfile import (
     FakeFileDescriptorStringIO,
     setup_pidfile_fixtures,
     make_pidlockfile_scenarios,
     setup_lockfile_method_mocks,
     )
-from .test_daemon import (
+from test_daemon import (
     setup_streams_fixtures,
     )
 import daemon.daemon

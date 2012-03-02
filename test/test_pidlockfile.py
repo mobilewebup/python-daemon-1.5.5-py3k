@@ -22,7 +22,7 @@ import errno
 
 import lockfile
 
-from . import scaffold
+from test import scaffold
 from daemon import pidlockfile
 
 class FakeFileDescriptorStringIO(StringIO, object):
