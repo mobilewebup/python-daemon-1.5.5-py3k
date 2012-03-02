@@ -1,4 +1,4 @@
-This is a port of lockfile 0.9.1 to Python 3.
+This is a port of python-daemon 1.5.5 to Python 3.
 
 It has been tested on Python 3.2, and may work on earlier 3.X as well.
 
