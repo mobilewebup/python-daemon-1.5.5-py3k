@@ -177,7 +177,7 @@ def setup_runner_fixtures(testcase):
         return result
 
     scaffold.mock(
-        "__builtin__.open",
+        "builtins.open",
         returns_func=mock_open,
         tracker=testcase.mock_tracker)
 
